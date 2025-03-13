@@ -14,13 +14,17 @@ datapath = os.path.join(rootpath, 'data')
 print(f"datapath: {datapath}")
 
 
+# We can either supply the url of the standalone spark master here:
+# spark = SparkSession.builder \
+#     .master("spark://de-zoomcamp.europe-west1-b.c.fresh-gravity-452908-t8.internal:7077") \
+#     .appName('sql_local') \
+#     .getOrCreate()
 
+# Or we can omit it here, and use spark-submit instead, like:
+# spark-submit --master="spark://de-zoomcamp.europe-west1-b.c.fresh-gravity-452908-t8.internal:7077" spark_sql_local.py
 spark = SparkSession.builder \
-    .master("spark://de-zoomcamp.europe-west1-b.c.fresh-gravity-452908-t8.internal:7077") \
     .appName('sql_local') \
     .getOrCreate()
-
-
 
 df_green = spark.read.parquet(os.path.join(datapath, 'pq', 'green', '*', '*'))
 # df_green.show()
