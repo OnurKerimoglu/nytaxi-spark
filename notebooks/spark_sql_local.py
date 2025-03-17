@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # imports
 
+import argparse
 import os
 import pandas as pd
 import pyspark
@@ -8,13 +9,28 @@ from pyspark.sql import functions as F
 from pyspark.sql import SparkSession
 from pyspark.sql import types
 
+# Read arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--input_green', required=True)
+parser.add_argument('--input_yellow', required=True)
+parser.add_argument('--output', required=True)
+args = parser.parse_args()
+input_green = args.input_green
+input_yellow = args.input_yellow
+output = args.output
+print(f"""
+spark_sql_local called with arguments:
+input_green: {input_green}
+input_yellow: {input_yellow}
+output: {output}
+""")
+
 # paths
 rootpath = os.path.dirname(os.path.abspath(""))
 datapath = os.path.join(rootpath, 'data')
 print(f"datapath: {datapath}")
 
-
-# We can either supply the url of the standalone spark master here:
+# We can either supply the url of the standalone spark master here, and call the script directly from terminal
 # spark = SparkSession.builder \
 #     .master("spark://de-zoomcamp.europe-west1-b.c.fresh-gravity-452908-t8.internal:7077") \
 #     .appName('sql_local') \
@@ -26,11 +42,13 @@ spark = SparkSession.builder \
     .appName('sql_local') \
     .getOrCreate()
 
-df_green = spark.read.parquet(os.path.join(datapath, 'pq', 'green', '*', '*'))
+#df_green = spark.read.parquet(os.path.join(datapath, 'pq', 'green', '*', '*'))
+df_green = spark.read.parquet(input_green)
 # df_green.show()
 # df_green.printSchema()
 
-df_yellow= spark.read.parquet(os.path.join(datapath, 'pq', 'yellow', '*', '*'))
+# df_yellow= spark.read.parquet(os.path.join(datapath, 'pq', 'yellow', '*', '*'))
+df_yellow= spark.read.parquet(input_yellow)
 # df_yellow.show()
 # df_yellow.printSchema()
 
@@ -100,7 +118,8 @@ df_result = spark.sql(query)
 
 df_result.show()
 
-df_result.coalesce(1).write.parquet(os.path.join(datapath, 'report', 'revenue_monthly_coalesced'), mode='overwrite')
+# df_result.coalesce(1).write.parquet(os.path.join(datapath, 'report', 'revenue_monthly_coalesced'), mode='overwrite')
+df_result.coalesce(1).write.parquet(output, mode='overwrite')
 
 # spark.sparkContext.stop()
 
