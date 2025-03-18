@@ -96,7 +96,7 @@ query = """
 select 
 -- Revenue grouping 
 PULocationID as revenue_zone,
-date_trunc("month", "pickup_datetime") as revenue_month,
+date_trunc("month", pickup_datetime) as revenue_month,
 service_type, 
 -- Revenue calculation 
 sum(fare_amount) as revenue_monthly_fare,
