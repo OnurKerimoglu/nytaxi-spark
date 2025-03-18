@@ -1,0 +1,8 @@
+gcloud dataproc jobs submit pyspark \
+    gs://ny-taxi-spark/code/spark_sql_local.py \
+    --cluster=ny-taxi-cluster \
+    --region=europe-west2 \
+    -- \
+    --input_green=gs://ny-taxi-spark/pq/green/*/* \
+    --input_yellow=gs://ny-taxi-spark/pq/yellow/*/* \
+    --output=gs://ny-taxi-spark/report_submitted/revenue_monthly_coalesced

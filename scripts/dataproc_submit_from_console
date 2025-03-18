@@ -1,0 +1,7 @@
+region: europe-west2
+cluster: ny-taxi-cluster
+main_python_file: gs://ny-taxi-spark/code/spark_sql_local.py \
+Arguments:
+--input_green=gs://ny-taxi-spark/pq/green/*/* \
+--input_yellow=gs://ny-taxi-spark/pq/yellow/*/* \
+--output=gs://ny-taxi-spark/report/revenue_monthly_coalesced
